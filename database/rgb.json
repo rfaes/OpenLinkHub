@@ -27,6 +27,13 @@
         "brightness": 0.5
       }
     },
+    "temperature": {
+      "speed": 1,
+      "brightness": 1,
+      "smoothness": 20,
+      "start": {},
+      "end": {}
+    },
     "watercolor": {
       "speed": 4,
       "brightness": 1

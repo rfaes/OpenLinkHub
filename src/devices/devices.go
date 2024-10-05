@@ -12,8 +12,9 @@ import (
 	"OpenLinkHub/src/logger"
 	"OpenLinkHub/src/metrics"
 	"fmt"
-	"github.com/sstallion/go-hid"
 	"strconv"
+
+	"github.com/sstallion/go-hid"
 )
 
 const (

@@ -42,7 +42,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"github.com/sstallion/go-hid"
 	"os"
 	"regexp"
 	"sort"
@@ -50,6 +49,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/sstallion/go-hid"
 )
 
 var (
@@ -751,6 +752,11 @@ func (d *Device) setDeviceColor() {
 							r.Static()
 							buff = append(buff, r.Output...)
 						}
+					case "temperature":
+						{
+							r.Temperature(d.getAverageTemperature())
+							buff = append(buff, r.Output...)
+						}
 					case "flickering":
 						{
 							lock.Lock()
@@ -847,6 +853,32 @@ func (d *Device) setDeviceColor() {
 			}
 		}
 	}(lightChannels)
+}
+
+func average(arr []float32) float32 {
+	var sum float32
+	for _, value := range arr {
+		sum += value
+	}
+	return sum / float32(len(arr)) // Divide the sum by the length of the array
+}
+
+// getAverageTemperature will return the average temperature of all probes
+func (d *Device) getAverageTemperature() float32 {
+	var measurements []float32
+
+	keys := make([]int, 0)
+	for k := range d.Devices {
+		keys = append(keys, k)
+	}
+
+	for _, k := range keys {
+		if d.Devices[k].IsTemperatureProbe {
+			measurements = append(measurements, d.Devices[k].Temperature)
+		}
+	}
+
+	return average(measurements)
 }
 
 // getDevices will fetch all devices connected to a hub
